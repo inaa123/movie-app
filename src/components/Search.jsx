@@ -53,10 +53,13 @@ const SearchForm = styled.form`
     position: relative;
     top: 0;
     left: 0;
-    /* transition: 5000ms; */
+    transition: 500ms;
+    width: 30px;
     &.on{ //on이 들어오면
-        border-color: #ffffff;
-        transition: 5000ms;
+        border: solid 1px #ffffff;
+        transition: 500ms;
+        width: 240px;
+        border-radius : 4px;
     }
     .search-btn{
         color: #ffffff;
