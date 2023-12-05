@@ -1,26 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-// import App from './App';
 import reportWebVitals from './reportWebVitals';
-import GlobalStyle from './styled/GlobalStyle';
-import Main from './pages/Main';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import NotFound from './pages/NotFound';
-import MainVideos from './components/MainVideos';
-import MovieList from './components/MovieList';
-import {Provider} from 'react-redux';
-import {thunk} from 'redux-thunk'
-import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
-import rootReducer from './store/reducer';
+import MovieDetail from './pages/MovieDetail';
+import App from './App';
+/*
+import 시에 {} 사용하는 것과 안하는 것의 차이
+기능을 내보내기 하는 방법에 따라서 차이가 발생한다.
+
+{}가 없는 import는 보통 export default로 내보내기 된 컴포넌트를 import할 때다.
+{}를 사용해서 가져올 때에는 default가 아닌 하나의 컴포넌트에 여러개의 export가 되어 있는 경우 각각 가져오기 위해서 사용한다.
+*/
 
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENTION_COMPOSE__ || compose;
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 const router = createBrowserRouter([
   {
     path : '/',
-    element : <Main />,
+    element : <App />,
     errorElement : <NotFound />,
     children : [ //children은 path를 기준으로 뒤에 붙는 주소를 말한다.
       /* children
@@ -29,20 +26,16 @@ const router = createBrowserRouter([
       */
       //{path : ''}
     ]
+  },
+  {
+    path : 'movie/:movieId', //path를 만든다. movie안에 movieId를 받아오는 path를 만든다. 여기서 :은 유동적인 값 -> 정해진값이 아닌 클릭했을 때마다  나오는 고유의 아이디 값을 받아서 링크에 쏴줘야한다. 그래야 링크에 내가 클릭한 정보의 값들이 나오게 됨
+    element : <MovieDetail /> //element는 MovieDetail페이지를 열어준다.
   }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GlobalStyle />
-    {/* <App /> */}
-    {/* <Main /> */}
-    <MainVideos />
-    <Provider store={store}> {/*왜 provider로 감싸야하는가? */}
-      <MovieList />
-    </Provider>
-
     <RouterProvider router={router} />
   </React.StrictMode>
 );
