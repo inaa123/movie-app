@@ -17,7 +17,12 @@ function Action() {
 
     return (
         <div>
-            
+            <MovieContainer>
+                <MovieTitle>액션</MovieTitle>
+                <MovieWrapper>
+                    
+                </MovieWrapper>
+            </MovieContainer>
         </div>
     )
 }
