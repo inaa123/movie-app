@@ -67,7 +67,9 @@ const GlobalStyle = createGlobalStyle`
         background: transparent;
         border : none;
     }
-
+    body, html{
+        background: #000000;
+    }
 `
 
 export default GlobalStyle;
