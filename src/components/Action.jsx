@@ -15,11 +15,13 @@ import 'swiper/css'; //스와이퍼 기본 css 적용 import
 import 'swiper/css/navigation'; //스와이퍼 좌우 버튼 기본 css
 import 'swiper/css/pagination'; //스와이퍼 도트 리스트 기본 css
 import '../styled/swiperCustomCss.css';
+import MovieCard from './MovieCard';
 
 
 function Action() {
-    //클릭한걸 알려주기 위함. 뭘 클릭했는지. 어떤 인덱스를 클릭햇는지에 따라서 그 안의 정보들을 넘겨줘야 함. / useState(false) 일단 클릭 안한 상태니 false, 클릭하면 뭔가를 받아올 것
-    const [isClick, setIsClick] =  useState(false);
+    const [itemSelect, setItemSelect] = useState({}); //클릭한 요소의 정보를 itemSelect에 담아줄것
+    const [isClick, setIsClick] =  useState(false);//클릭한걸 알려주기 위함. 뭘 클릭했는지. 어떤 인덱스를 클릭햇는지에 따라서 그 안의 정보들을 넘겨줘야 함. / useState(false) 일단 클릭 안한 상태니 false, 클릭하면 뭔가를 받아올 것
+    const [genres, setGenres] = useState({});//배열이 비어있다 배열이 들어가고 계속 채워줘야 하므로 상태변수필요(useState값 필요)
     const dispatch = useDispatch(); //생성된 action(아까 요청한 것)의 state에 접근한 것 index.jsx의 axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&width_genres=28`) -> reducer폴더의 index.jsx에서 ..state state값을 뽑아내고??? ->Action에 장르별 컴퍼넌트를 담는다..??
 
     useEffect(() => {
@@ -29,7 +31,7 @@ function Action() {
     console.log(fetchActionMovies())
 
     const actionData = useSelector((state) => state.action.movies, []) || []
-    //console.log(actionData.results) //actionData에 있던 results 출력
+    //console.log('액션데이터' + actionData.results) //actionData에 있던 results 출력
     //actionData.results에 object로 list들이 담겨져 있다.
 
     const overViewEvent = (el) => {
@@ -38,6 +40,37 @@ function Action() {
     
     const overViewClose = () => {
         setIsClick(false); //setIsClick el정보를 받아온 것을 닫으면서 비워줌 그래야 다른 애도 받아올 수있음
+    }
+
+    //장르 추가
+    useEffect(() => {
+        const fetchGenres = async () => {
+            try{
+                const res = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=82776dd4e021405937c471b1f995902b&language=ko-KR')
+                const data = await res.json();
+                const genreMap = data.genres.reduce((acc,genre)=>{
+                    acc[genre.id] = genre.name;
+                    //console.log(genre.name) 장르이름 잘 뽑힘
+                    
+                    return acc
+                }, {});
+                //gnereMap을 받아 줄 상태변수 필요해서 useState로만들어줌
+                setGenres(genreMap)
+            } catch(error){
+                console.error(error);
+            }
+        }
+        fetchGenres(); //한번 실행해줌(최초 마운트시 한번만 실행 [])
+    }, [])
+
+    const getGenreText = (genreId) => {
+        //genreId를 받아와서 map으로 요소들을 만들어서 하나로 합침 
+        return genreId.map((el)=>genres[el]).join()
+    }
+
+    const movieClickEvent = (movie) => { //movie값을 전달해서
+        setItemSelect(movie); //setItemSelect에 보내준다. 그래야 OverView {...itemSelect}에 담겨져서 불러오게 된다.
+        setIsClick(true);
     }
 
     return (
@@ -56,10 +89,16 @@ function Action() {
                     <MovieWrapper>
                         {/*actionData의result가 있고 actionData.results를 map으로 el,index를 받아서 배열로 뿌린다. <MovieItem>가 div가 되고 */}
                         {actionData.results && actionData.results.map((el,index)=>(
-                            <SwiperSlide>
-                                <MovieItem onClick={()=>overViewEvent(el,index)}>
+                            <SwiperSlide key={index}>
+                                <MovieCard 
+                                    movie={el} 
+                                    genreText={getGenreText(el.genre_ids)}
+                                    onClick = {movieClickEvent}
+                                />
+                                {/*MovieCard에 moive와 genreText를 넘겨준다. */}
+                                {/* <MovieItem onClick={()=>overViewEvent(el,index)}>
                                     <img src={`https://image.tmdb.org/t/p/original/${el.backdrop_path}`} />
-                                </MovieItem>
+                                </MovieItem> */}
                                 {/*{isClick === index && (
                                     <OverView/>
                                 )} */}
@@ -68,7 +107,12 @@ function Action() {
                     </MovieWrapper>
                 </Swiper>
             </MovieContainer>
-            {isClick && <OverView movie={isClick} setIsClick={overViewClose}/>}
+            {/* ()안에 넣은 이유는? */}
+            {isClick && ( 
+                <OverViewWrapper isVisible={!!itemSelect}>
+                    <OverView {...itemSelect} setIsClick={() => setIsClick(false)}/>
+                </OverViewWrapper>
+            )}
             {/*isClick을 하게되면 Overview엔 movie란 데이터를 넘길 것, isClick한 요소에 영화에 대한 정보들이 다 담겨있음, 이 정보를 OverView에 넘겨준다.
             setIsClick은 overViewClose를 넘겨준다.
             */}
@@ -94,9 +138,17 @@ const MovieWrapper = styled.div`
     height: 200px;
 `
 
-const MovieItem = styled.div`
-    img{
-        display: block;
-        width: 100%;
-    }
+const OverViewWrapper = styled.div`
+//맨처음에 보이면 안됨 :  props로 전달시켜줘, porps의 isVisible을 받아와서 맞으면 block 아니면 none
+    display: ${props => [props.isVisible ? 'block' : 'none']};
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
 `

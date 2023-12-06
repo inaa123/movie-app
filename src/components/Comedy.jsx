@@ -23,7 +23,7 @@ function Comedy() {
 
     //console.log(fetchComedyMovies())
 
-    const actionData = useSelector((state) => state.action.movies, []) || []
+    const actionData = useSelector((state) => state.comedy.movies, []) || []
     const overViewEvent = (el) => {
         setIsClick(el)
     }

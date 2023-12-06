@@ -17,7 +17,7 @@ export const fetchActionData = (data) => { //data를 reducer에 넘겨준다.
 export const fetchActionMovies = () => {
     return (dispatch) => {
         //dispatch : 외부에서 데이터를 가져올 때 사용하는 reducer의 기능이다. useState의 대체다. (임의로 만든거 x)
-        return axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&width_genres=28`)// 가져올 것 (movie리스트에서 받아 온 것(아이디값) 아이디값에 해당하는 장르를 뽑아 올 수 있다. 28 -> 액션)
+        return axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`)// 가져올 것 (movie리스트에서 받아 온 것(아이디값) 아이디값에 해당하는 장르를 뽑아 올 수 있다. 28 -> 액션)
         .then((res) => {
             dispatch(fetchActionData(res.data))
             //then => axios에서 콜백함수를 대체하는 return문과 같은 구문이다. 
@@ -35,7 +35,7 @@ export const fetchComedyData = (data) => { //data를 reducer에 넘겨준다.
 export const fetchComedyMovies = () => {
     return (dispatch) => {
         //dispatch : 외부에서 데이터를 가져올 때 사용하는 reducer의 기능이다. useState의 대체다. (임의로 만든거 x)
-        return axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&width_genres=35`)// 가져올 것 (movie리스트에서 받아 온 것(아이디값) 아이디값에 해당하는 장르를 뽑아 올 수 있다. 28 -> 액션)
+        return axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`)// 가져올 것 (movie리스트에서 받아 온 것(아이디값) 아이디값에 해당하는 장르를 뽑아 올 수 있다. 28 -> 액션)
         .then((res) => {
             dispatch(fetchComedyData(res.data))
             //then => axios에서 콜백함수를 대체하는 return문과 같은 구문이다. 
