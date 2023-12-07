@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { BiSearch } from "react-icons/bi";
 import { MdClear } from "react-icons/md";
 import styled from 'styled-components';
+import MovieCard from './MovieCard';
 
 function Search() {
     const [text, setText] = useState('') //검색어의 텍스트를 받아 올 상태 state (onClear이벤트 clearBtn 클릭하면 text비우기)
@@ -140,12 +141,17 @@ function Search() {
     )
 }
 
+// <List props = {el} key={el.id}/>에서 불러오긴 하지만 실행되는건 const List = 부분이다. 정보들이 넘어오는 건 <img src~부분(실제 정보가 담긴 애)이다. 실행되는 애에 이미지 대신 movieCard를 넣어준다.
 const List = (props) => {
     const {backdrop_path, title} = props.props;
     const imgUrl = backdrop_path;
     return (
         <div className='listItem'>
-            <img src={`https://image.tmdb.org/3/t/p/original/${imgUrl}`} />
+            {/* 검색리스트에서 이미지를 클릭하면 movieCard로 넘어가게? */}
+            <MovieCard movie={props.props}/>
+            {/*MovieCard에 backdrop_path, title, 이미지 값 들이 전달돼야 한다. 
+            movie에 대한 정보는 props.props로 넘겨준다.*/}
+            {/* <img src={`https://image.tmdb.org/3/t/p/original/${imgUrl}`} /> */}
         </div>
     )
 }
@@ -224,6 +230,7 @@ const ResultContainer = styled.div`
             flex-wrap: wrap;
             gap: 20px;
             .listItem{
+                position: relative;
                 img{
                     width: 350px;
                 }
