@@ -14,6 +14,7 @@ import {thunk} from 'redux-thunk'
 import { applyMiddleware, createStore, compose } from 'redux';
 import rootReducer from './store/reducer';
 import MovieDetail from './pages/MovieDetail';
+import Search from './components/Search';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENTION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
@@ -23,6 +24,7 @@ function App() {
             <GlobalStyle />
             {/* <App /> */}
             <Main />
+            <Search />
             <MainVideos />
             <Provider store={store}> {/*왜 provider로 감싸야하는가? */}
             <MovieList />

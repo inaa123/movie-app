@@ -32,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
     }
     body {
     line-height: 1;
+    overflow-x: hidden;//기본값으로 overflow-x만 잡아준다. 가로축은 볼 필요 없기 때문에 hidden으로
     }
     ol, ul {
     list-style: none;
@@ -69,6 +70,10 @@ const GlobalStyle = createGlobalStyle`
     }
     body, html{
         background: #000000;
+        
+        &.no-scroll{
+            overflow-y: hidden; //클래스에 no-scroll일 경우 overflow-y축 hidden으로 한다. 조건문에 맞춰 스크롤을 넣었다뺐다 할 수 있음
+        }
     }
 `
 

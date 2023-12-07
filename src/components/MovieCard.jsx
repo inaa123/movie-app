@@ -1,16 +1,24 @@
 import React from 'react'
-import { IoMdPlay } from "react-icons/io";
+import { IoMdPlay, IoIosArrowDown } from "react-icons/io";
 import { LuPlus } from "react-icons/lu";
 import { SlLike } from "react-icons/sl";
-import { IoIosArrowDown } from "react-icons/io";
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-function MovieCard({movie, genreText, onClick}) {//movie,genreText 요소를 받아온다. hover한 영화의 정보를 moviecard에 넘겨준 것
+function MovieCard({movie, genreText}) {//movie,genreText 요소를 받아온다. hover한 영화의 정보를 moviecard에 넘겨준 것
 
     //const {title, backdrop_path} = movie; //받아온 title, backdrop_path, genredId를 movie 에 묶어둔다. hover시 추가됨
-    
+
+    //link 이동시켜주는 애가 없었음. Action.jsx에선 이동시켜주는 애가 있었음.. 어디에?
+    const navigate = useNavigate(); //링크로 이동시켜주는 요소다.
+
+    const overViewEvent = () => {
+        //링크 이동은 index.js에 있는 path: 'movie/:movieId'경로를 알려줘야 페이지가 넘어간다. 그래서 여기 navigate에서도 movie/${movie.id}를 받아와 이동시켜줘야 한다.(클릭시)
+        navigate(`movie/${movie.id}`)
+    }
+
     return (
-        <MovieItem onClick = {()=>onClick(movie)}>
+        <MovieItem onClick = {overViewEvent}>
             <img src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`} />
             <Content className="addi-content"> {/*이미지만 보이다가 hover시 Content요소가 나타나도록*/}
                 <p>{movie.title}</p>

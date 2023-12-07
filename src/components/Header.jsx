@@ -10,9 +10,13 @@ function Header() {
         <HeaderContainer>
             <h1 className='logo'><Link to='/'><RiNetflixFill /></Link></h1>
             <Navigation/> {/*컴포넌트로 */}
-            <HeaderRight> {/*styled로.*/}
-                <Search/> {/*컴포넌트로 */}
-            </HeaderRight>
+
+            {/* <HeaderRight> {/*styled로.
+                <Search/> {/*컴포넌트로 
+            </HeaderRight> 
+            스크롤이 이동된 상태에서 검색창이 생셩되면 컨텐츠가 겹치는 오류 -> 구조를 바꾼다. App에다 바로 넣는 걸로
+            서치보다 movieList들의 출력 순서가 더 높기 때문
+            */}
         </HeaderContainer>
     )
 }
