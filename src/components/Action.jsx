@@ -33,8 +33,9 @@ function Action() {
     //console.log(fetchActionMovies())
 
     const actionData = useSelector((state) => state.action.movies, []) || []
+    //useSelector : store의 상태값을 변경할 때 사용하는 요소다.
     //console.log('액션데이터' + actionData.results) //actionData에 있던 results 출력
-    //actionData.results에 object로 list들이 담겨져 있다.
+    //actionData.results에 object로 list들이 담겨져 있다. 액션 영화에 대한 정보들이 담겨있다.
 
     const overViewEvent = (el) => {
         setIsClick(el)
