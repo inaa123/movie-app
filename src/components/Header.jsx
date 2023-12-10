@@ -36,10 +36,10 @@ const HeaderContainer = styled.header`
     .logo{
         font-size: 30px;
         
-        a{ //Link가 a태그, babel이 htmtl인식할 수 있게 컴파일 해준다.
+        a{ //Link가 a태그.-> babel이 htmtl인식할 수 있게 컴파일 해준다.
             display: flex;
             align-items: center;
-            path{ //로고이미지에 컬러 주고 싶으면 svg가 아닌 path에 줘야한다.
+            path{ //로고이미지에 컬러 주고 싶으면 svg가 아닌 path에 줘야한다.(path가 진짜 객체)
                 color: red;
             }
         }
@@ -47,8 +47,8 @@ const HeaderContainer = styled.header`
     }
 `
 
-const HeaderRight = styled.div`
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-`
+// const HeaderRight = styled.div`
+//     margin-left: auto; //맨끝(우측)
+//     display: flex;
+//     align-items: center;
+// `

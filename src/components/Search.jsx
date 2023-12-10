@@ -4,12 +4,13 @@ import { BiSearch } from "react-icons/bi";
 import { MdClear } from "react-icons/md";
 import styled from 'styled-components';
 import MovieCard from './MovieCard';
+import { fetchGenres } from '../api/api';
 
 function Search() {
     const [text, setText] = useState('') //검색어의 텍스트를 받아 올 상태 state (onClear이벤트 clearBtn 클릭하면 text비우기)
-    const [visible, setVisible] = useState(false) //input창의 기본 속성 값 지정. 버튼 클릭하면 setVisible로 보이도록 바꿀 수 있음
+    const [visible, setVisible] = useState(false) //input창의 기본 속성 값 지정(false면 안보임). 버튼 클릭하면 setVisible 값을 true로 바꾸고 보이도록 바꿀 수 있음 ()
     const [showClearBtn, setShowClearBtn] = useState(''); 
-    //검색어의 입력 여부를 보기 위해서 만든 상태 변수 state 
+    //검색어의 입력 여부를 보기 위해서 만든 상태 변수 state. 
    
     const [list, setList] = useState(false) //검색리스트 있는지 여부 리스트가 있는지 없는지 체크해줌 
     const [movieList, setMovieList] = useState([]); //검색 결과 리스트를 출력해줄지 여부. 맨처음 비어있다가 list배열을 받아오면 됨
@@ -21,9 +22,9 @@ function Search() {
     const BASE_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${text}&include_adult=false&language=ko-KR&page=1`;
 
     const onToggleEvent = (e) => {
-        e.preventDefault();
-
-        setVisible((prev) => !prev) //prev는 이전 상태값으로 false->true로 true->false로 반대값줌
+        e.preventDefault(); //기본이벤트 없애고
+        //setVisible의 값을 바꾼다. 이벤트가 발생하는 버튼은 반대값 줘야함(false->true로 true->false)
+        setVisible((prev) => !prev) //prev는 이전 상태값으로 반대값 줌(false->true로 true->false로)
     }
 
     //리액트에 클릭이벤트, 등 
@@ -79,6 +80,17 @@ function Search() {
 
     //텍스트 없을때 검색창 외 다른곳 클릭하면 검색창 닫히기
     useEffect(() => {
+        //서치는 장르 구분하지 않는다. text가 들어갈 때만 text에대한 장르를 받아오면 되기때문에 useEffect안에 작성
+        const fetchSearchGenres = async() => {
+            try{
+                const genres = await fetchGenres();
+            }catch(error){
+                console.error(error);
+            }
+        }
+        
+
+        
         //이벤트가 들어가는 곳 특정할 수 없음. -> 클릭한 곳에서 이벤트가 일어났는지 아닌지 봐야한다.(ref로 전달)
         const clickSideCloseEvent = (e) => {
             // console.log(searchRef.current)
@@ -87,7 +99,8 @@ function Search() {
                 setVisible(false);
             }
         }
-        document.addEventListener('mousedown', clickSideCloseEvent)//이때 실행
+        document.addEventListener('mousedown', clickSideCloseEvent);//이때 실행
+        fetchSearchGenres();
 
         //useEffect에서 return문은 리셋시키는 용도로 쓰이기도 한다.
         return () => { //위에 한번 실행하고 나서 return으로 이벤트를 없앤다. 그래야지 텍스트가 있는지 없는지 다시 검사할 수 있음 (검색창에 텍스트 있는 경우 다른곳을 클릭해도 닫히지 않게 하기 위해 removeEventListener를 해준다.)
@@ -103,18 +116,21 @@ function Search() {
         }
     }
 
+    
+
     return (
         <>
             <SearchForm visible={`${visible}`} className={visible ? 'on' : null} ref={searchRef}> 
                 {/* 리액트에서 null은 값을 비운다는 의미이기도 하다. */}
-                {/* visible왜 받아온 거지? , visible이 트루면 className에 on을 주고 아니면 null */}
+                {/* visible왜 받아온 거지? -> input창이 늘어났다 줄어들었다는 SearchForm 길이로 조절한다. visible의 값을 위에서 받아오는 ${visible}의 값으로 하여 (ture,false)를 보내준다.*/}
+                {/* visible이 트루면 className에 on을 주고 아니면 null */}
                 {/* ref={searchRef} , ref값에 searchRef로 지정 */}
                 <button className='search-btn' onClick={onToggleEvent}><BiSearch /></button>
                 {visible && ( //visible일 때만 input이 생기도록
                     <input type='text' 
                         placeholder='검색어를 입력하세요'
                         value={text}
-                        onChange={inputChange}
+                        onChange={inputChange} //텍스트 써지는거 자체를 이벤트로 받아옴(onChange)
                         onKeyPress={enterPress}
                     ></input>
                 )}
@@ -143,8 +159,7 @@ function Search() {
 
 // <List props = {el} key={el.id}/>에서 불러오긴 하지만 실행되는건 const List = 부분이다. 정보들이 넘어오는 건 <img src~부분(실제 정보가 담긴 애)이다. 실행되는 애에 이미지 대신 movieCard를 넣어준다.
 const List = (props) => {
-    const {backdrop_path, title} = props.props;
-    const imgUrl = backdrop_path;
+    const {backdrop_path, title, genre_ids} = props.props;
     return (
         <div className='listItem'>
             {/* 검색리스트에서 이미지를 클릭하면 movieCard로 넘어가게? */}
@@ -230,7 +245,7 @@ const ResultContainer = styled.div`
             flex-wrap: wrap;
             gap: 20px;
             .listItem{
-                position: relative;
+                position: relative; //검색창에서 이미지 hover시 movieCard가 제자리에서 잘 나오게 하기 위해 position을 추가해줌. 
                 img{
                     width: 350px;
                 }

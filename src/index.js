@@ -14,11 +14,11 @@ import 시에 {} 사용하는 것과 안하는 것의 차이
 */
 
 
-const router = createBrowserRouter([
+const router = createBrowserRouter([ //경로 잡기
   {
     path : '/',
-    element : <App />,
-    errorElement : <NotFound />,
+    element : <App />, //path '/'이면 App이 뜨게
+    errorElement : <NotFound />, //다른 페이지로 넘어가게 되면(errorElement) NotFound들어가게 한다.
     children : [ //children은 path를 기준으로 뒤에 붙는 주소를 말한다.
       /* children
       중첩 라우터를 clidren으로 연결하게 되면 내부에 있는 파일은 부모 요소의 링크를 기준으로 잡힌다.

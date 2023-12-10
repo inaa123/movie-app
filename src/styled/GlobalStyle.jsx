@@ -77,4 +77,4 @@ const GlobalStyle = createGlobalStyle`
     }
 `
 
-export default GlobalStyle;
+export default GlobalStyle; //사용하기 위해.  최상위 요소(App.js이나 index.js)에다 컴포넌트 방식으로 끌어다 쓰면 됨.

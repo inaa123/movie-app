@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchActionMovies } from '../store';
 import styled from 'styled-components';
 import OverView from './OverView';
+import MovieCard from './MovieCard';
+import { fetchGenres } from '../api/api';
 // import Swiper from 'swiper'; 자동 import될때 주의!! 이거 아님
 
 //swiper
@@ -15,7 +17,7 @@ import 'swiper/css'; //스와이퍼 기본 css 적용 import
 import 'swiper/css/navigation'; //스와이퍼 좌우 버튼 기본 css
 import 'swiper/css/pagination'; //스와이퍼 도트 리스트 기본 css
 import '../styled/swiperCustomCss.css';
-import MovieCard from './MovieCard';
+
 
 
 function Action() {
@@ -43,24 +45,34 @@ function Action() {
     }
 
     //장르 추가
-    useEffect(() => {
-        const fetchGenres = async () => {
-            try{
-                const res = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=82776dd4e021405937c471b1f995902b&language=ko-KR')
-                const data = await res.json();
-                const genreMap = data.genres.reduce((acc,genre)=>{
-                    acc[genre.id] = genre.name;
-                    //console.log(genre.name) 장르이름 잘 뽑힘
+    // useEffect(() => {
+    //     const fetchGenres = async () => {
+    //         try{
+    //             const res = await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=82776dd4e021405937c471b1f995902b&language=ko-KR')
+    //             const data = await res.json();
+    //             const genreMap = data.genres.reduce((acc,genre)=>{
+    //                 acc[genre.id] = genre.name;
+    //                 //console.log(genre.name) 장르이름 잘 뽑힘
                     
-                    return acc
-                }, {});
-                //gnereMap을 받아 줄 상태변수 필요해서 useState로만들어줌
-                setGenres(genreMap)
-            } catch(error){
-                console.error(error);
-            }
+    //                 return acc
+    //             }, {});
+    //             //gnereMap을 받아 줄 상태변수 필요해서 useState로만들어줌
+    //             setGenres(genreMap)
+    //         } catch(error){
+    //             console.error(error);
+    //         }
+    //     }
+    //     fetchGenres(); //한번 실행해줌(최초 마운트시 한번만 실행 [])
+    // }, [])
+
+    //장르 추가
+    useEffect(() => {
+        const fetchActionMovieGneres = async () => {
+            dispatch(fetchActionMovies());
+            const genres = await fetchGenres();
+            setGenres(genres);
         }
-        fetchGenres(); //한번 실행해줌(최초 마운트시 한번만 실행 [])
+        fetchActionMovieGneres();
     }, [])
 
     const getGenreText = (genreId) => {
