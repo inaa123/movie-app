@@ -26,7 +26,7 @@ function App() {
             <Main />
             <Search />
             <MainVideos />
-            <Provider store={store}> {/*왜 provider로 감싸야하는가? */}
+            <Provider store={store}> {/*왜 provider로 감싸야하는가? 무비리스트 여러개 값을 받아오기 때문에 wrapping해줘야 한다. -> Provider로 감싸줘야 한다.  */}
             <MovieList />
             </Provider>
         </>
