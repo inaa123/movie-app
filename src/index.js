@@ -19,16 +19,16 @@ const router = createBrowserRouter([ //경로 잡기
     path : '/',
     element : <App />, //path '/'이면 App이 뜨게
     errorElement : <NotFound />, //다른 페이지로 넘어가게 되면(errorElement) NotFound들어가게 한다.
-    children : [ //children은 path를 기준으로 뒤에 붙는 주소를 말한다.
+    //children : [ children은 path를 기준으로 뒤에 붙는 주소를 말한다.
       /* children
       중첩 라우터를 clidren으로 연결하게 되면 내부에 있는 파일은 부모 요소의 링크를 기준으로 잡힌다.
       내부에 children으로 작성하게 되면 중첩되는 url은 생략할 수 있다.
       */
       //{path : ''}
-    ]
+    //]
   },
   {
-    path : 'movie/:movieId', //path를 만든다. movie안에 movieId를 받아오는 path를 만든다. 여기서 :은 유동적인 값 -> 정해진값이 아닌 클릭했을 때마다  나오는 고유의 아이디 값을 받아서 링크에 쏴줘야한다. 그래야 링크에 내가 클릭한 정보의 값들이 나오게 됨
+    path : 'movie/:movieId', //path를 만든다. movie안에 movieId를 받아오는 path를 만든다. 여기서 :은 유동적인 값 -> 정해진값이 아닌 클릭했을 때마다  나오는 고유의 아이디 값을 받아서 링크에 보내줘야한다. 그래야 링크에 내가 클릭한 정보의 값들이 나오게 됨
     element : <MovieDetail /> //element는 MovieDetail페이지를 열어준다.
   }
 ]);
@@ -36,9 +36,11 @@ const router = createBrowserRouter([ //경로 잡기
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RouterProvider router={router} /> 
+    {/*Router는 하위경로를 보여줘야 하기 때문에 index.js에 작성한다. */}
   </React.StrictMode>
 );
+//index.js에선 경로를 지정하고, 상위컴포넌트(App.js)에 출력할 컴포넌트들을 넣는방식으로 한다.
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

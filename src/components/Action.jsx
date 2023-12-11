@@ -10,7 +10,7 @@ import { fetchGenres } from '../api/api';
 
 //swiper
 //yarn add swiper
-import {Swiper, SwiperSlide} from 'swiper/react'; //스와이퍼 적용 import
+import {Swiper, SwiperSlide} from 'swiper/react'; //스와이퍼 적용 import (swiper/react로!)
 //스크립트에서 swiper를 가져오면 가지고 있던 class명자동 적용됨. 마찬가지로 Swiper와 SwiperSlide엔 자동으로 class명이 들어가 있음
 import {Navigation, Pagination} from 'swiper/modules'; //모듈 import
 import 'swiper/css'; //스와이퍼 기본 css 적용 import
@@ -22,7 +22,7 @@ import '../styled/swiperCustomCss.css';
 
 function Action() {
     const [itemSelect, setItemSelect] = useState({}); //클릭한 요소의 정보를 itemSelect에 담아줄것
-    const [isClick, setIsClick] =  useState(false);//클릭한걸 알려주기 위함. 뭘 클릭했는지. 어떤 인덱스를 클릭햇는지에 따라서 그 안의 정보들을 넘겨줘야 함. / useState(false) 일단 클릭 안한 상태니 false, 클릭하면 뭔가를 받아올 것
+    const [isClick, setIsClick] =  useState(false);//클릭한걸 알려주기 위함. 뭘 클릭했는지. 어떤 인덱스를 클릭햇는지에 따라서 그 안의 정보들을 넘겨줘야 하니까. / useState(false) 일단 클릭 안한 상태니 false, 클릭하면 뭔가를 받아올 것
     const [genres, setGenres] = useState({});//배열이 비어있다 배열이 들어가고 계속 채워줘야 하므로 상태변수필요(useState값 필요)
     const dispatch = useDispatch(); //생성된 action(index.jsx에서 요청한 것)의 state에 접근한 것. index.jsx의 axios.get(`${BASE_URL}/discover/movie?api_key=${API_KEY}&width_genres=28`)이 실행이 되면 -> reducer폴더의 index.jsx에서 state data를 쭉 받아오게 해준다. 그 전달되는 요소들은 Action이라는 장르별 컴포넌트에 담아 둔다.
 
@@ -95,7 +95,7 @@ function Action() {
                     slidesPerView={5} //한번에 보여질 슬라이드 아이템의 갯수
                     slidesPerGroup={5} //슬라이드 이동시 한번에 움직일 슬라이드 아이템의 갯수
                     loop //무한 반복
-                    modules={[Navigation, Pagination]} //모듈 적용, 가져오기
+                    modules={[Navigation, Pagination]} //모듈 적용, 가져오기 -> import,css 따로 가져와야 함
                     navigation //모듈 실제 적용. 가져온 navigation 실제로 적용
                     pagination //모듈 실제 적용
                 >
@@ -109,18 +109,16 @@ function Action() {
                                     onClick = {movieClickEvent}
                                 />
                                 {/*MovieCard에 moive와 genreText를 넘겨준다. */}
-                                {/* <MovieItem onClick={()=>overViewEvent(el,index)}>
-                                    <img src={`https://image.tmdb.org/t/p/original/${el.backdrop_path}`} />
+                                {/* <MovieItem onClick={()=>overViewEvent(el,index)}> overViewEvent실행되면 OverView컴포넌트 실행(클릭할때마다 영화정보들이 계속 달라지는 박스보여줌 - 페이지 넘어가는거X)
+                                    <img src={`https://image.tmdb.org/t/p/original/${el.backdrop_path}`} /> 
                                 </MovieItem> */}
-                                {/*{isClick === index && (
-                                    <OverView/>
-                                )} */}
                             </SwiperSlide>
                         ))}
                     </MovieWrapper>
                 </Swiper>
             </MovieContainer>
-            {/* ()안에 넣은 이유는? */}
+            {/* 여기에 실행한 이유(OverView) : 그래야 영역 전체에서 진행함 */}
+            {/*isClick && <Overview movie={isClick}/> */}
             {isClick && ( 
                 <OverViewWrapper isVisible={!!itemSelect}>
                     <OverView {...itemSelect} setIsClick={() => setIsClick(false)}/>

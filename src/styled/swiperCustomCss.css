@@ -4,7 +4,7 @@
     width: 60px;
     height: 100%;
     background: rgba(0,0,0,0.5);
-    top : 0; /*position은 잡혀있음*/
+    top: 0;/*position은 잡혀있음*/
     transition: 500ms;
     margin:0;
 }
