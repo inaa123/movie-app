@@ -118,13 +118,14 @@ function Action() {
                 </Swiper>
             </MovieContainer>
             {/* 여기에 실행한 이유(OverView) : 그래야 영역 전체에서 진행함 */}
-            {/*isClick && <Overview movie={isClick}/> */}
+            {/*isClick && <Overview movie={isClick}  setIsClick={overViewClose}/> */}
             {isClick && ( 
                 <OverViewWrapper isVisible={!!itemSelect}>
                     <OverView {...itemSelect} setIsClick={() => setIsClick(false)}/>
                 </OverViewWrapper>
             )}
-            {/*isClick을 하게되면 Overview엔 movie란 데이터를 넘길 것, isClick한 요소에 영화에 대한 정보들이 다 담겨있음, 이 정보를 OverView에 넘겨준다.
+            {/* {isClick && <OverView movie={isClick} : 클릭한 요소에 정보값을 넘겨주는 거 필요 -> 클릭해서 overview활성화 시키면 그 안에 넘어오는 값들 있어야 함 그래야 Overview페이지 안에 정보가 하나씩 들어옴
+            // isClick하면 OverView엔 movie란 값을 넘긴다(isClick한 요소에 영화의 값 다 담겨 있음->그 정보들을 Overview에 넘겨준다.),
             setIsClick은 overViewClose를 넘겨준다.
             */}
         </div>
