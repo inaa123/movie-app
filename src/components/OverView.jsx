@@ -8,11 +8,12 @@ import { Link } from 'react-router-dom';
 function OverView({setIsClick, title, movieId, backdrop_path , overview}) { 
 //function OverView({movie}){ Action에서 OverView movie={isClick} movie로 넘겼으니 {movie}를 받아온다. movie안엔 여러 객체가 담겨있다. 필요한거 뽑아서 사용
 //overview는 줄거리임
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(false); //id를 받기 위해
     const overViewRef = useRef(null)
 
     return (
-        <HoverContainer ref={overViewRef} className={`overview ${isVisible ? 'visible' : ''}`}> {/* HoverContainer : 전체 투명한(opacity), className은 overview와 isVisible이면 visible, 아니면 x 배경*/}
+        //HoverContainer에 ref는 overViewRef를 전달해준다.
+        <HoverContainer ref={overViewRef} className={`overview ${isVisible ? 'visible' : ''}`}> {/* HoverContainer : 전체 투명한(opacity)배경, className은 overview와 isVisible이면 visible클래스 넣고, 아니면 x */}
             {/*받아온 영화의 정보, video img등 가 들어가야함 */}
             <HoverWrapper> {/*영화 상세정보 박스 */}
                 <CloseBtn onClick={()=>setIsClick(false)}> {/*onClick을 하면 닫힌다. 외부(Action)에서 열려있던 애를 닫아야 하기 때문에 Action하고 연결되어 있어야 함*/}

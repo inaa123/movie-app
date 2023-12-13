@@ -5,16 +5,17 @@ import { SlLike } from "react-icons/sl";
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
+//MovieCard는 MovieList - Action, Comedy.jsx에서 이미지 hover하면 해당 요소의 정보들이 뜬다.(장르 숫자 -> 문자로 전환)
 function MovieCard({movie, genreText}) {//movie,genreText 요소를 받아온다. hover한 영화의 정보를 moviecard에 넘겨준 것
 
-    //const {title, backdrop_path} = movie; //받아온 title, backdrop_path, genredId를 movie 에 묶어둔다. hover시 추가됨
+    //const {title, backdrop_path, genre_id} = movie; //받아온 title, backdrop_path, genredId를 movie 에 묶어둔다. hover시 추가됨
+    //genresId받아오는 애 없어서 map오류 남
 
-    //link 이동시켜주는 애가 없었음. Action.jsx에선 이동시켜주는 애가 있었음.. 어디에?
     const navigate = useNavigate(); //링크로 이동시켜주는 요소다.
 
     const overViewEvent = () => {
         //링크 이동은 index.js에 있는 path: 'movie/:movieId'경로를 알려줘야 페이지가 넘어간다. 그래서 여기 navigate에서도 movie/${movie.id}를 받아와 이동시켜줘야 한다.(클릭시)
-        navigate(`movie/${movie.id}`)
+        navigate(`movie/${movie.id}`)//링크이동(MovieDetail로)
     }
 
     return (

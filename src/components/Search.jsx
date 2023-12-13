@@ -13,7 +13,7 @@ function Search() {
     //검색어의 입력 여부를 보기 위해서 만든 상태 변수 state. 
    
     const [list, setList] = useState(false) //검색리스트 있는지 여부 리스트가 있는지 없는지 체크해줌 
-    const [movieList, setMovieList] = useState([]); //검색 결과 리스트를 출력해줄지 여부. 맨처음 비어있다가 list배열을 받아오면 됨
+    const [movieList, setMovieList] = useState([]); //검색 결과 리스트를 출력. 맨처음 비어있다가 list배열을 받아오면 됨
     const searchRef = useRef(); //searchRef는 useRef()로 받아온다.
 
 
@@ -38,7 +38,7 @@ function Search() {
     }
 
     const fetch = async () => {
-        const res = await axios.get(BASE_URL); //axios에서 BASE_URL을 가져온다.
+        const res = await axios.get(BASE_URL); //axios에서 BASE_URL을 가져온다. 여기서 axios는 서버를 의미한다.(api의axiosX)
         data = res.data.results || [];
         setMovieList(data); //movieList에 data를 담아준다.
         //console.log(data);
@@ -53,7 +53,7 @@ function Search() {
         if(e.target.value.trim()){ //텍스트가 있으면
             fetch(setMovieList()); //검색한 내용을 setMovieList에 담고,
             setList(true); //setList도 남겨야함(true)
-        }else{ //텍스트를 지우거나 없으면
+        }else{ //텍스트를 지우거나 없으면 다시 초기화
             setMovieList([]); 
             setList(false);
             ///moveList와 list의 값도 초기값으로 돌려줘야 함
@@ -65,6 +65,7 @@ function Search() {
 
     기본값은 no-scroll remove값이다.
     (상태값이 바뀜 useEffect로 설정)
+    //조건문: 리스트가 없고 있고
     */
     useEffect(() => {
         //조건문: 리스트가 없고 있고
@@ -88,14 +89,14 @@ function Search() {
                 console.error(error);
             }
         }
-        
 
         
-        //이벤트가 들어가는 곳 특정할 수 없음. -> 클릭한 곳에서 이벤트가 일어났는지 아닌지 봐야한다.(ref로 전달)
+        
+        //이벤트가 들어가는 곳 특정할 수 없음(모든 곳에서 가능). -> 클릭한 곳에서 이벤트가 일어났는지 아닌지 봐야한다.(ref로 전달,(useRef사용))
         const clickSideCloseEvent = (e) => {
             // console.log(searchRef.current)
             //console.log(searchRef.current.contains(e.target));
-            if(searchRef.current && !searchRef.current.contains(e.target) && !text){ //searchRef.current:내가 선택한 요소, searchRef.current.contains(e.target):내가 클릭한 애가 target이 아니면, !text: 텍스트도 없어야함
+            if(searchRef.current && !searchRef.current.contains(e.target) && !text){ //searchRef.current:내가 선택한 요소, searchRef.current.contains(e.target):내가 클릭한 애가 target(검색input창true)이 아니면, !text: 텍스트도 없어야함
                 setVisible(false);
             }
         }
@@ -110,13 +111,11 @@ function Search() {
 
     //엔터키 실행 막기(자동 submit막아줌)
     const enterPress = (e) => {
-        // console.log(e.key) e.key : 내가 누른 키의 값을 알려줌
+        // console.log(e.key); e.key - 내가 누른 키의 값을 알려줌
         if(e.key === 'Enter'){ //내가 누른 키의 값이 Enter이면 기본 이벤트 실행을 막아주기
             e.preventDefault();
         }
     }
-
-    
 
     return (
         <>
@@ -131,7 +130,7 @@ function Search() {
                         placeholder='검색어를 입력하세요'
                         value={text}
                         onChange={inputChange} //텍스트 써지는거 자체를 이벤트로 받아옴(onChange)
-                        onKeyPress={enterPress}
+                        onKeyPress={enterPress} //엔터키 -submit막기
                     ></input>
                 )}
                 
@@ -158,14 +157,15 @@ function Search() {
 }
 
 // <List props = {el} key={el.id}/>에서 불러오긴 하지만 실행되는건 const List = 부분이다. 정보들이 넘어오는 건 <img src~부분(실제 정보가 담긴 애)이다. 실행되는 애에 이미지 대신 movieCard를 넣어준다.
-const List = (props) => {
+
+const List = (props) => { //props 받아 온 걸, backdrop_path, title, genre_ids받아와서 props의 props로 연결한다.
     const {backdrop_path, title, genre_ids} = props.props;
     return (
         <div className='listItem'>
             {/* 검색리스트에서 이미지를 클릭하면 movieCard로 넘어가게? */}
             <MovieCard movie={props.props}/>
             {/*MovieCard에 backdrop_path, title, 이미지 값 들이 전달돼야 한다. 
-            movie에 대한 정보는 props.props로 넘겨준다.*/}
+            MovieCard movie에 대한 정보는 props.props로 넘겨준다.*/}
             {/* <img src={`https://image.tmdb.org/3/t/p/original/${imgUrl}`} /> */}
         </div>
     )
@@ -253,3 +253,12 @@ const ResultContainer = styled.div`
         }
     }
 `
+
+/*
+해결해야할 것(완료-)
+1 검색어를 지워도 결과창이 계속 남는 오류 - 해결
+2 스크롤이 이동된 상태에서 검색창이 생성될 경우 컨텐츠가 서로 겹쳐지는 현상- 해결
+3 스크롤바 2개- 해결
+4 검색창에서 검색어 입력후 엔터키 치면 영역이 닫히는 오류(리액트에선 input창에서 엔터키를 입력하면 자동으로 submit되는 것이 기본값)- 해결
+5 텍스트가 없을 때 검색창 외에 다른 곳을 클릭하면 검색창이 닫히도록 수정(텍스트가 있을 땐 다른 곳 클릭해도 검색창 닫히지 않음) -> useEffect로
+*/
